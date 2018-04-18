@@ -1,0 +1,34 @@
+﻿<Window x:Class="SwissTransportGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SwissTransportGUI"
+        mc:Ignorable="d"
+        Title="Fahrplan" Height="445" Width="740" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <Button Background="white" BorderThickness="0">
+                <Image Width="60" Source="res/ico_home.png" />
+            </Button>
+            <TextBlock Text="Fahrplan" TextAlignment="Center"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+            <Button Background="white" BorderThickness="0">
+                <Image Width="60" Source="res/ico_home.png" />
+            </Button>
+            <TextBlock Text="Abfahrtstafel" TextAlignment="Center"/>
+        </StackPanel>
+        <Grid Grid.RowSpan="3" Grid.Column="1">
+        </Grid>
+    </Grid>
+</Window>

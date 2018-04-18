@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwissTransport", "src\Swiss
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwissTransportTest", "tests\SwissTransportTest\SwissTransportTest.csproj", "{959C6E54-5B1C-40F5-938A-C57B17451421}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwissTransportGUI", "SwissTransportGUI\SwissTransportGUI.csproj", "{B4206E3D-C8A2-4061-B932-9D9F779235A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{959C6E54-5B1C-40F5-938A-C57B17451421}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{959C6E54-5B1C-40F5-938A-C57B17451421}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{959C6E54-5B1C-40F5-938A-C57B17451421}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4206E3D-C8A2-4061-B932-9D9F779235A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4206E3D-C8A2-4061-B932-9D9F779235A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4206E3D-C8A2-4061-B932-9D9F779235A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4206E3D-C8A2-4061-B932-9D9F779235A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
