@@ -6,29 +6,118 @@
         xmlns:local="clr-namespace:SwissTransportGUI"
         mc:Ignorable="d"
         Title="Fahrplan" Height="445" Width="740" WindowStartupLocation="CenterScreen">
-    <Grid>
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="80"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="100"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
-            <Button Background="white" BorderThickness="0">
-                <Image Width="60" Source="res/ico_home.png" />
+            <Button x:Name="TabChangeButtonFahrplan" Background="white" BorderThickness="0" Click="TabChangeButtonFahrplan_Click">
+                <Image Width="60" Source="res/search.png" />
             </Button>
             <TextBlock Text="Fahrplan" TextAlignment="Center"/>
         </StackPanel>
         <StackPanel Grid.Row="1">
-            <Button Background="white" BorderThickness="0">
-                <Image Width="60" Source="res/ico_home.png" />
+            <Button x:Name="TabChangeButtonFahrplan1" Background="white" BorderThickness="0" Click="TabChangeButtonFahrplan1_Click">
+                <Image Width="60" Source="res/calendar.png" />
             </Button>
             <TextBlock Text="Abfahrtstafel" TextAlignment="Center"/>
         </StackPanel>
-        <Grid Grid.RowSpan="3" Grid.Column="1">
-        </Grid>
+
+        <TabControl x:Name="TabController" Grid.RowSpan="3" Grid.Column="1">
+            <TabItem x:Name="FahrplanTab" Visibility="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="45" />
+                        <RowDefinition Height="100" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25">Verbindung suchen</Label>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                        </Grid.RowDefinitions>
+                        <Label VerticalAlignment="Center" FontSize="12">Von:</Label>
+                        <ComboBox x:Name="FromSearchCombobox"
+                          Grid.Row="1"
+                          IsEditable="True"
+                          ItemsSource="{Binding FromSearchPreviewItems}"
+                          IsTextSearchEnabled="False"
+                          StaysOpenOnEdit="True"
+                          Margin="1"
+                          TextBoxBase.TextChanged="FromSearchbox_TextChanged"
+                          GotFocus="Searchbox_GotFocus" />
+                        <Label Grid.Column="1" VerticalAlignment="Center" FontSize="12">Nach:</Label>
+                        <ComboBox x:Name="ToSearchCombobox"
+                          Grid.Column="1"
+                          Grid.Row="1"
+                          IsEditable="True"
+                          ItemsSource="{Binding ToSearchPreviewItems}"
+                          IsTextSearchEnabled="False"
+                          StaysOpenOnEdit="True"
+                          Margin="1"
+                          TextBoxBase.TextChanged="ToSearchbox_TextChanged"
+                          GotFocus="Searchbox_GotFocus" />
+                        <Button x:Name="SearchButton" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="3" Click="SearchButton_Click">Verbindung suchen</Button>
+                    </Grid>
+                    <ListView Grid.Row="3" Margin="3" ItemsSource="{Binding Connections}" >
+                        <ListView.View>
+                            <GridView>
+                                <GridView.Columns>
+                                    <GridViewColumn Header="Abfahrt" DisplayMemberBinding="{Binding Path=Departure}"/>
+                                    <GridViewColumn Header="Ankunft" DisplayMemberBinding="{Binding Path=Arrival}"/>
+                                    <GridViewColumn Header="Dauer" DisplayMemberBinding="{Binding Path=Duration}" />
+                                    <GridViewColumn Header="Gleis" DisplayMemberBinding="{Binding Path=Platform}" />
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="AbfahrtstafelTab" Visibility="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="45" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25">Abfahrtstafel anzeigen</Label>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <DockPanel>
+                            <Label Content="Ort: " DockPanel.Dock="Left" />
+                            <ComboBox x:Name="LocationSearchCombobox"
+                                      DockPanel.Dock="Right"
+                                      Grid.Column="1"
+                                      Grid.Row="1"
+                                      IsEditable="True"
+                                      ItemsSource="{Binding LocationSearchPreviewItems}"
+                                      IsTextSearchEnabled="False"
+                                      StaysOpenOnEdit="True"
+                                      Margin="1"
+                                      TextBoxBase.TextChanged="LocationSearchCombobox_TextChanged"
+                                      GotFocus="Searchbox_GotFocus" />
+                        </DockPanel>
+                        <Button x:Name="AbfahrtstafelLoadButton" Grid.Column="1" Click="AbfahrtstafelLoadButton_Click">Abfahrtstafel laden</Button>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        
     </Grid>
 </Window>
