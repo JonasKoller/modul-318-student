@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SwissTransportGUI
 {
@@ -44,17 +40,7 @@ namespace SwissTransportGUI
         public string Departure
         {
             get { return _departure; }
-            set { _departure = getFormattedDate(value); }
-        }
-
-        private string getFormattedDate(string value)
-        {
-            if (String.IsNullOrEmpty(value))
-                return "";
-            DateTime date;
-            if (!DateTime.TryParse(value, out date))
-                return "";
-            return String.Format("{0:dd/MM/yyyy HH:mm:ss}", date);
+            set { _departure = String.IsNullOrEmpty(value) ? "" : value; }
         }
     }
 }

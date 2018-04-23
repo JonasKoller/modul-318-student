@@ -51,14 +51,14 @@
                         </Grid.RowDefinitions>
                         <Label VerticalAlignment="Center" FontSize="12">Von:</Label>
                         <ComboBox x:Name="FromSearchCombobox"
-                          Grid.Row="1"
-                          IsEditable="True"
-                          ItemsSource="{Binding FromSearchPreviewItems}"
-                          IsTextSearchEnabled="False"
-                          StaysOpenOnEdit="True"
-                          Margin="1"
-                          TextBoxBase.TextChanged="FromSearchbox_TextChanged"
-                          GotFocus="Searchbox_GotFocus" />
+                            Grid.Row="1"
+                            IsEditable="True"
+                            ItemsSource="{Binding FromSearchPreviewItems}"
+                            IsTextSearchEnabled="False"
+                            StaysOpenOnEdit="True"
+                            Margin="1"
+                            TextBoxBase.TextChanged="FromSearchbox_TextChanged"
+                            GotFocus="Searchbox_GotFocus" />
                         <Label Grid.Column="1" VerticalAlignment="Center" FontSize="12">Nach:</Label>
                         <ComboBox x:Name="ToSearchCombobox"
                           Grid.Column="1"
@@ -70,7 +70,24 @@
                           Margin="1"
                           TextBoxBase.TextChanged="ToSearchbox_TextChanged"
                           GotFocus="Searchbox_GotFocus" />
-                        <Button x:Name="SearchButton" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="3" Click="SearchButton_Click">Verbindung suchen</Button>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.6*"/>
+                                <ColumnDefinition Width="0.4*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label>Datum</Label>
+                            <Label Grid.Column="1">Zeit</Label>
+                        </Grid>
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.6*"/>
+                                <ColumnDefinition Width="0.4*"/>
+                            </Grid.ColumnDefinitions>
+                            <DatePicker Margin="1" SelectedDate="{Binding DepartDate}"></DatePicker>
+                            <TextBox Grid.Column="2" Margin="1" Text="{Binding DepartTime}" /> 
+                        </Grid>
+                        <Button x:Name="ShowLocationButton" Grid.Row="2" Grid.Column="1" Margin="3" Click="ShowLocationButton_Click">Station anzeigen</Button>
+                        <Button x:Name="SearchButton" Grid.Row="3" Grid.Column="1" Margin="3" Click="SearchButton_Click">Verbindung suchen</Button>
                     </Grid>
                     <ListView Grid.Row="3" Margin="3" ItemsSource="{Binding Connections}" >
                         <ListView.View>
@@ -115,9 +132,51 @@
                         </DockPanel>
                         <Button x:Name="AbfahrtstafelLoadButton" Grid.Column="1" Click="AbfahrtstafelLoadButton_Click">Abfahrtstafel laden</Button>
                     </Grid>
+                    <ListView Grid.Row="3" Margin="3" ItemsSource="{Binding Connections}" >
+                        <ListView.View>
+                            <GridView>
+                                <GridView.Columns>
+                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=Name}"/>
+                                    <GridViewColumn Header="Nummer" DisplayMemberBinding="{Binding Path=Number}"/>
+                                    <GridViewColumn Header="Richtung" DisplayMemberBinding="{Binding Path=To}" />
+                                    <GridViewColumn Header="Abfahrt" DisplayMemberBinding="{Binding Path=Departure}" />
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="StationenTab" Visibility="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="45" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25">Station anzeigen</Label>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <DockPanel>
+                            <Label Content="Ort: " DockPanel.Dock="Left" />
+                            <ComboBox x:Name="StationSearchCombobox"
+                                      DockPanel.Dock="Right"
+                                      Grid.Column="1"
+                                      Grid.Row="1"
+                                      IsEditable="True"
+                                      ItemsSource="{Binding LocationSearchPreviewItems}"
+                                      IsTextSearchEnabled="False"
+                                      StaysOpenOnEdit="True"
+                                      Margin="1"
+                                      TextBoxBase.TextChanged="LocationSearchCombobox_TextChanged"
+                                      GotFocus="Searchbox_GotFocus" />
+                        </DockPanel>
+                        <Button x:Name="StationLoadButton" Grid.Column="1">Abfahrtstafel laden</Button>
+                    </Grid>
                 </Grid>
             </TabItem>
         </TabControl>
-        
     </Grid>
 </Window>

@@ -92,8 +92,9 @@ namespace SwissTransportGUI
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            Connections searchResult = _transport.GetConnections(_viewModelFahrplan.FromSearchString, _viewModelFahrplan.ToSearchString);
-            if (searchResult == null)
+            _viewModelFahrplan.Connections.Clear();
+            Connections searchResult = _transport.GetConnections(_viewModelFahrplan.FromSearchString, _viewModelFahrplan.ToSearchString, _viewModelFahrplan.DepartDate.ToString("yyyy-MM-dd"), _viewModelFahrplan.DepartTime);
+            if (searchResult == null || searchResult.ConnectionList == null)
                 return;
 
             foreach (Connection c in searchResult.ConnectionList)
@@ -117,13 +118,31 @@ namespace SwissTransportGUI
 
         private void AbfahrtstafelLoadButton_Click(object sender, RoutedEventArgs e)
         {
+            _viewModelAbfahrtstafel.Connections.Clear();
             StationBoardRoot searchResult = _transport.GetStationBoard(_viewModelAbfahrtstafel.LocationSearchString);
+
+            if (searchResult == null || searchResult.Entries == null)
+                return;
 
             foreach (StationBoard s in searchResult.Entries)
             {
-                StationBoardConnection sbCon = new StationBoardConnection(s.Name, s.Number, s.To, s.Stop.Departure);
+                string formattedDate;
+                if(s.Stop.Departure == null)
+                {
+                    formattedDate = "";
+                }
+                else
+                {
+                    formattedDate = String.Format("{0:dd/MM/yyyy HH:mm:ss}", s.Stop.Departure);
+                }
+                StationBoardConnection sbCon = new StationBoardConnection(s.Name, s.Number, s.To, formattedDate);
                 _viewModelAbfahrtstafel.Connections.Add(sbCon);
             }
+        }
+
+        private void ShowLocationButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

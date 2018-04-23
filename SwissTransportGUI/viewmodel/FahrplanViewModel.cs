@@ -17,6 +17,8 @@ namespace SwissTransportGUI.viewmodel
             FromSearchPreviewItems = new ObservableCollection<string>();
             ToSearchPreviewItems = new ObservableCollection<string>();
             Connections = new ObservableCollection<DisplayConnection>();
+            DepartDate = DateTime.Now;
+            DepartTime = DateTime.Now.AddHours(6).ToString("HH:mm");
         }
 
         public string FromSearchString { get; set; }
@@ -26,6 +28,10 @@ namespace SwissTransportGUI.viewmodel
         public ObservableCollection<string> FromSearchPreviewItems { get; set; }
 
         public ObservableCollection<string> ToSearchPreviewItems { get; set; }
+
+        public DateTime DepartDate { set; get; }
+
+        public String DepartTime { set; get; }
 
         public ObservableCollection<DisplayConnection> Connections { get; set; }
     }
