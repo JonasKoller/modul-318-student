@@ -1,5 +1,6 @@
 ﻿using SwissTransportGUI.viewmodel;
 using System;
+using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -43,7 +44,8 @@ namespace SwissTransportGUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + "\n\nFehlercode für Profis: " + ex.InnerException.Message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                if(!(ex.InnerException is WebException))
+                    MessageBox.Show(ex.Message + "\n\nFehlercode für Profis: " + ex.InnerException.Message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
