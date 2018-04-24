@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace SwissTransportGUI
 {
@@ -10,7 +11,6 @@ namespace SwissTransportGUI
     /// </summary>
     public partial class MainWindow : Window
     {
-
         private FahrplanViewModel _viewModelFahrplan;
         private AbfahrtstafelViewModel _viewModelAbfahrtstafel;
         private StationViewModel _viewModelStation;
