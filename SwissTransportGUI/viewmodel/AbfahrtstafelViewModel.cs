@@ -1,27 +1,37 @@
 ﻿using PropertyChanged;
 using SwissTransport;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SwissTransportGUI.viewmodel
 {
     [AddINotifyPropertyChangedInterfaceAttribute]
     class AbfahrtstafelViewModel
     {
+        private Transport _transport;
         public AbfahrtstafelViewModel()
         {
-            LocationSearchPreviewItems = new ObservableCollection<string>();
+            _transport = new Transport();
             Connections = new ObservableCollection<StationBoardConnection>();
         }
 
-        public string LocationSearchString { get; set; }
-
-        public ObservableCollection<string> LocationSearchPreviewItems { get; set; }
-
         public ObservableCollection<StationBoardConnection> Connections { get; set; }
+
+        public void UpdateConnections(string location)
+        {
+            Connections.Clear();
+
+            StationBoardRoot searchResult = _transport.GetStationBoard(location);
+            if (searchResult == null || searchResult.Entries == null)
+                return;
+
+            foreach (StationBoard s in searchResult.Entries)
+            {
+                string formattedDate = "";
+                if (s.Stop.Departure != null)
+                    formattedDate = s.Stop.Departure.ToString("dd.MM.yyyy HH:mm");
+                StationBoardConnection sbCon = new StationBoardConnection(s.Name, s.Number, s.To, formattedDate);
+                Connections.Add(sbCon);
+            }
+        }
     }
 }

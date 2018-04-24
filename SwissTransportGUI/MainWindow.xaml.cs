@@ -1,19 +1,7 @@
-﻿using SwissTransport;
-using SwissTransportGUI.viewmodel;
+﻿using SwissTransportGUI.viewmodel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SwissTransportGUI
 {
@@ -24,7 +12,7 @@ namespace SwissTransportGUI
     {
         private FahrplanViewModel _viewModelFahrplan;
         private AbfahrtstafelViewModel _viewModelAbfahrtstafel;
-        private Transport _transport;
+        private StationViewModel _viewModelStation;
 
         public MainWindow()
         {
@@ -32,76 +20,14 @@ namespace SwissTransportGUI
 
             _viewModelFahrplan = new FahrplanViewModel();
             _viewModelAbfahrtstafel = new AbfahrtstafelViewModel();
-            _transport = new Transport();
+            _viewModelStation = new StationViewModel();
 
             this.DataContext = _viewModelFahrplan;
         }
 
-        private void FromSearchbox_TextChanged(object sender, RoutedEventArgs e)
+        private void TimetableSearchButton_Click(object sender, RoutedEventArgs e)
         {
-            ComboBox cBox = (sender as ComboBox);
-            _viewModelFahrplan.FromSearchString = cBox.Text;
-            
-            _viewModelFahrplan.FromSearchPreviewItems.Clear();
-            Stations searchResult = _transport.GetStations(_viewModelFahrplan.FromSearchString);
-            if (searchResult == null)
-                return;
-
-            foreach(Station s in searchResult.StationList)
-            {
-               _viewModelFahrplan.FromSearchPreviewItems.Add(s.Name);
-            }
-        }
-
-        private void ToSearchbox_TextChanged(object sender, RoutedEventArgs e)
-        {
-            ComboBox cBox = (sender as ComboBox);
-            _viewModelFahrplan.ToSearchString = cBox.Text;
-
-            _viewModelFahrplan.ToSearchPreviewItems.Clear();
-            Stations searchResult = _transport.GetStations(_viewModelFahrplan.ToSearchString);
-            if (searchResult == null)
-                return;
-
-            foreach (Station s in searchResult.StationList)
-            {
-                _viewModelFahrplan.ToSearchPreviewItems.Add(s.Name);
-            }
-        }
-
-        private void LocationSearchCombobox_TextChanged(object sender, RoutedEventArgs e)
-        {
-            ComboBox cBox = (sender as ComboBox);
-            _viewModelAbfahrtstafel.LocationSearchString = cBox.Text;
-
-            _viewModelAbfahrtstafel.LocationSearchPreviewItems.Clear();
-            Stations searchResult = _transport.GetStations(_viewModelAbfahrtstafel.LocationSearchString);
-            if (searchResult == null)
-                return;
-
-            foreach (Station s in searchResult.StationList)
-            {
-                _viewModelAbfahrtstafel.LocationSearchPreviewItems.Add(s.Name);
-            }
-        }
-
-        private void Searchbox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            (sender as ComboBox).IsDropDownOpen = true;
-        }
-
-        private void SearchButton_Click(object sender, RoutedEventArgs e)
-        {
-            _viewModelFahrplan.Connections.Clear();
-            Connections searchResult = _transport.GetConnections(_viewModelFahrplan.FromSearchString, _viewModelFahrplan.ToSearchString, _viewModelFahrplan.DepartDate.ToString("yyyy-MM-dd"), _viewModelFahrplan.DepartTime);
-            if (searchResult == null || searchResult.ConnectionList == null)
-                return;
-
-            foreach (Connection c in searchResult.ConnectionList)
-            {
-                DisplayConnection dpCon = new DisplayConnection(c.From.Departure, c.To.Arrival, c.Duration, c.From.Platform);
-                _viewModelFahrplan.Connections.Add(dpCon);
-            }
+            _viewModelFahrplan.UpdateConnections(FromSearchBox.Location, ToSearchBox.Location);
         }
 
         private void TabChangeButtonFahrplan_Click(object sender, RoutedEventArgs e)
@@ -116,33 +42,33 @@ namespace SwissTransportGUI
             this.DataContext = _viewModelAbfahrtstafel;
         }
 
-        private void AbfahrtstafelLoadButton_Click(object sender, RoutedEventArgs e)
+        private void TabChangeButtonStation_Click(object sender, RoutedEventArgs e)
         {
-            _viewModelAbfahrtstafel.Connections.Clear();
-            StationBoardRoot searchResult = _transport.GetStationBoard(_viewModelAbfahrtstafel.LocationSearchString);
-
-            if (searchResult == null || searchResult.Entries == null)
-                return;
-
-            foreach (StationBoard s in searchResult.Entries)
-            {
-                string formattedDate;
-                if(s.Stop.Departure == null)
-                {
-                    formattedDate = "";
-                }
-                else
-                {
-                    formattedDate = String.Format("{0:dd/MM/yyyy HH:mm:ss}", s.Stop.Departure);
-                }
-                StationBoardConnection sbCon = new StationBoardConnection(s.Name, s.Number, s.To, formattedDate);
-                _viewModelAbfahrtstafel.Connections.Add(sbCon);
-            }
+            (this.FindName("TabController") as TabControl).SelectedIndex = 2;
+            this.DataContext = _viewModelStation;
         }
 
-        private void ShowLocationButton_Click(object sender, RoutedEventArgs e)
+        private void AbfahrtstafelLoadButton_Click(object sender, RoutedEventArgs e)
         {
+            _viewModelAbfahrtstafel.UpdateConnections(DepartboardSearchBox.Location);
+        }
 
+        private void StationOpenBrowserButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (String.IsNullOrEmpty(StationSearchBox.Location))
+                return;
+            string urlLocation = Uri.EscapeDataString(StationSearchBox.Location);
+            _viewModelStation.StationUrl = "https://www.google.com/maps/search/?api=1&query=" + urlLocation;
+
+            if (String.IsNullOrEmpty(_viewModelStation.StationUrl))
+                return;
+
+            System.Diagnostics.Process.Start(_viewModelStation.StationUrl);
+        }
+
+        private void TimetableEmailButton_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(_viewModelFahrplan.GetMailToString(FromSearchBox.Location, ToSearchBox.Location));
         }
     }
 }

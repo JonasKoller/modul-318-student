@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:control = "clr-namespace:SwissTransportGUI" 
         xmlns:local="clr-namespace:SwissTransportGUI"
         mc:Ignorable="d"
         Title="Fahrplan" Height="445" Width="740" WindowStartupLocation="CenterScreen">
@@ -28,6 +29,12 @@
             </Button>
             <TextBlock Text="Abfahrtstafel" TextAlignment="Center"/>
         </StackPanel>
+        <StackPanel Grid.Row="2">
+            <Button x:Name="TabChangeButtonStation" Background="white" BorderThickness="0" Click="TabChangeButtonStation_Click">
+                <Image Width="60" Source="res/point.png" />
+            </Button>
+            <TextBlock Text="Stationen" TextAlignment="Center"/>
+        </StackPanel>
 
         <TabControl x:Name="TabController" Grid.RowSpan="3" Grid.Column="1">
             <TabItem x:Name="FahrplanTab" Visibility="Collapsed">
@@ -49,46 +56,37 @@
                             <RowDefinition Height="25" />
                             <RowDefinition Height="25" />
                         </Grid.RowDefinitions>
+                        
                         <Label VerticalAlignment="Center" FontSize="12">Von:</Label>
-                        <ComboBox x:Name="FromSearchCombobox"
-                            Grid.Row="1"
-                            IsEditable="True"
-                            ItemsSource="{Binding FromSearchPreviewItems}"
-                            IsTextSearchEnabled="False"
-                            StaysOpenOnEdit="True"
-                            Margin="1"
-                            TextBoxBase.TextChanged="FromSearchbox_TextChanged"
-                            GotFocus="Searchbox_GotFocus" />
+                        <control:AutocompleteStationSearch x:Name="FromSearchBox" Grid.Row="1"/>
+                        
                         <Label Grid.Column="1" VerticalAlignment="Center" FontSize="12">Nach:</Label>
-                        <ComboBox x:Name="ToSearchCombobox"
-                          Grid.Column="1"
-                          Grid.Row="1"
-                          IsEditable="True"
-                          ItemsSource="{Binding ToSearchPreviewItems}"
-                          IsTextSearchEnabled="False"
-                          StaysOpenOnEdit="True"
-                          Margin="1"
-                          TextBoxBase.TextChanged="ToSearchbox_TextChanged"
-                          GotFocus="Searchbox_GotFocus" />
+                        <control:AutocompleteStationSearch x:Name="ToSearchBox" Grid.Column="1" Grid.Row="1"/>
+                        
                         <Grid Grid.Row="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="0.6*"/>
                                 <ColumnDefinition Width="0.4*"/>
                             </Grid.ColumnDefinitions>
+                            
                             <Label>Datum</Label>
                             <Label Grid.Column="1">Zeit</Label>
                         </Grid>
+                        
                         <Grid Grid.Row="3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="0.6*"/>
                                 <ColumnDefinition Width="0.4*"/>
                             </Grid.ColumnDefinitions>
+                            
                             <DatePicker Margin="1" SelectedDate="{Binding DepartDate}"></DatePicker>
                             <TextBox Grid.Column="2" Margin="1" Text="{Binding DepartTime}" /> 
                         </Grid>
-                        <Button x:Name="ShowLocationButton" Grid.Row="2" Grid.Column="1" Margin="3" Click="ShowLocationButton_Click">Station anzeigen</Button>
-                        <Button x:Name="SearchButton" Grid.Row="3" Grid.Column="1" Margin="3" Click="SearchButton_Click">Verbindung suchen</Button>
+
+                        <Button x:Name="TimetableEmailButton" Grid.Row="2" Grid.Column="1" Margin="3" Click="TimetableEmailButton_Click">Verbindungen per Mail verschicken</Button>
+                        <Button x:Name="TimetableSearchButton" Grid.Row="3" Grid.Column="1" Margin="3" IsDefault="True" Click="TimetableSearchButton_Click">Verbindung suchen</Button>
                     </Grid>
+                    
                     <ListView Grid.Row="3" Margin="3" ItemsSource="{Binding Connections}" >
                         <ListView.View>
                             <GridView>
@@ -118,19 +116,9 @@
                         </Grid.ColumnDefinitions>
                         <DockPanel>
                             <Label Content="Ort: " DockPanel.Dock="Left" />
-                            <ComboBox x:Name="LocationSearchCombobox"
-                                      DockPanel.Dock="Right"
-                                      Grid.Column="1"
-                                      Grid.Row="1"
-                                      IsEditable="True"
-                                      ItemsSource="{Binding LocationSearchPreviewItems}"
-                                      IsTextSearchEnabled="False"
-                                      StaysOpenOnEdit="True"
-                                      Margin="1"
-                                      TextBoxBase.TextChanged="LocationSearchCombobox_TextChanged"
-                                      GotFocus="Searchbox_GotFocus" />
+                            <control:AutocompleteStationSearch x:Name="DepartboardSearchBox" Grid.Column="1" Grid.Row="1" DockPanel.Dock="Right"/>
                         </DockPanel>
-                        <Button x:Name="AbfahrtstafelLoadButton" Grid.Column="1" Click="AbfahrtstafelLoadButton_Click">Abfahrtstafel laden</Button>
+                        <Button x:Name="AbfahrtstafelLoadButton" Grid.Column="1" IsDefault="True" Click="AbfahrtstafelLoadButton_Click">Abfahrtstafel laden</Button>
                     </Grid>
                     <ListView Grid.Row="3" Margin="3" ItemsSource="{Binding Connections}" >
                         <ListView.View>
@@ -151,6 +139,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="45" />
                         <RowDefinition Height="25" />
+                        <RowDefinition Height="65" />
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
                     <Label HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25">Station anzeigen</Label>
@@ -161,20 +150,20 @@
                         </Grid.ColumnDefinitions>
                         <DockPanel>
                             <Label Content="Ort: " DockPanel.Dock="Left" />
-                            <ComboBox x:Name="StationSearchCombobox"
-                                      DockPanel.Dock="Right"
-                                      Grid.Column="1"
-                                      Grid.Row="1"
-                                      IsEditable="True"
-                                      ItemsSource="{Binding LocationSearchPreviewItems}"
-                                      IsTextSearchEnabled="False"
-                                      StaysOpenOnEdit="True"
-                                      Margin="1"
-                                      TextBoxBase.TextChanged="LocationSearchCombobox_TextChanged"
-                                      GotFocus="Searchbox_GotFocus" />
+                            <control:AutocompleteStationSearch x:Name="StationSearchBox"/>
                         </DockPanel>
-                        <Button x:Name="StationLoadButton" Grid.Column="1">Abfahrtstafel laden</Button>
+                        <Button x:Name="StationOpenBrowserButton" Grid.Column="1" IsDefault="True" Click="StationOpenBrowserButton_Click" Margin="1">Im Browser anzeigen</Button>
                     </Grid>
+                    <Label Grid.Row="2" Margin="0 20 0 0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25">Stationen in der Nähe</Label>
+                    <ListView Grid.Row="3" Margin="3" ItemsSource="{Binding NearStations}" >
+                        <ListView.View>
+                            <GridView>
+                                <GridView.Columns>
+                                    <GridViewColumn Header="Stationsname"  Width="300" DisplayMemberBinding="{Binding Path=Name}"/>
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                 </Grid>
             </TabItem>
         </TabControl>

@@ -17,6 +17,15 @@ namespace SwissTransport
         }
 
         [TestMethod]
+        public void LocationsWithCoordinates()
+        {
+            testee = new Transport();
+            var stations = testee.GetStations("47.476001", "8.306130");
+
+            Assert.AreEqual(10, stations.StationList.Count);
+        }
+
+        [TestMethod]
         public void StationBoard()
         {
             testee = new Transport();
