@@ -164,6 +164,7 @@
                             <GridView>
                                 <GridView.Columns>
                                     <GridViewColumn Header="Stationsname"  Width="300" DisplayMemberBinding="{Binding Path=Name}"/>
+                                    <GridViewColumn Header="Ungefähre Distanz in Metern"  Width="300" DisplayMemberBinding="{Binding Path=Distance}"/>
                                 </GridView.Columns>
                             </GridView>
                         </ListView.View>

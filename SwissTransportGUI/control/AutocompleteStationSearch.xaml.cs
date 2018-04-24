@@ -1,4 +1,5 @@
 ﻿using SwissTransportGUI.viewmodel;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,6 +20,10 @@ namespace SwissTransportGUI
             this.DataContext = _viewModel;
         }
 
+        /// <summary>
+        /// Methode, welche den Stationsnamen zurückgibt, welcher im AutocompleteStationSearch ausgesucht ist
+        /// <returns>Stationsname</returns>  
+        /// </summary>
         public string Location
         {
             get { return _viewModel.LocationSearchString; }
@@ -32,7 +37,14 @@ namespace SwissTransportGUI
         private void SearchComboBox_TextChanged(object sender, RoutedEventArgs e)
         {
             string locationString = (sender as ComboBox).Text;
-            _viewModel.UpdateLocationSearchPreviewItems(locationString);
+            try
+            {
+                _viewModel.UpdateLocationSearchPreviewItems(locationString);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n\nFehlercode für Profis: " + ex.InnerException.Message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

@@ -19,17 +19,9 @@ namespace SwissTransport
         
         private Stations GetStationsFromUrl(string requestUrl)
         {
-            Stream responseStream = null;
-            try
-            {
-                var request = CreateWebRequest(requestUrl);
-                var response = request.GetResponse();
-                responseStream = response.GetResponseStream();
-            }
-            catch
-            {
-                // do nothing
-            }
+            var request = CreateWebRequest(requestUrl);
+            var response = request.GetResponse();
+            var responseStream = response.GetResponseStream();
 
             if (responseStream != null)
             {
@@ -52,14 +44,8 @@ namespace SwissTransport
             {
                 var readToEnd = new StreamReader(responseStream).ReadToEnd();
                 var stationboard = new StationBoardRoot();
-                try
-                {
-                    stationboard = JsonConvert.DeserializeObject<StationBoardRoot>(readToEnd);
-                }
-                catch
-                {
-                    // do nothing
-                }
+                stationboard = JsonConvert.DeserializeObject<StationBoardRoot>(readToEnd);
+
                 return stationboard;
             }
 
@@ -69,6 +55,7 @@ namespace SwissTransport
         public Connections GetConnections(string fromStation, string toStattion, string departDate, string departTime, bool isDepartTime)
         {
             int isArrival = Convert.ToInt32(!isDepartTime);
+
             var request = CreateWebRequest("http://transport.opendata.ch/v1/connections?from=" + fromStation + "&to=" + toStattion + "&date=" + departDate + "&time=" + departTime + "&isArrivalTime=" + isArrival);
             var response = request.GetResponse();
             var responseStream = response.GetResponseStream();
@@ -77,13 +64,9 @@ namespace SwissTransport
             {
                 var readToEnd = new StreamReader(responseStream).ReadToEnd();
                 var connections = new Connections();
-                try
-                {
-                    connections = JsonConvert.DeserializeObject<Connections>(readToEnd);
-                } catch
-                {
-                    // do nothing
-                }
+
+                connections = JsonConvert.DeserializeObject<Connections>(readToEnd);
+
                 return connections;
             }
 

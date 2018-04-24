@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Device.Location;
 
 namespace SwissTransportGUI
@@ -14,7 +11,7 @@ namespace SwissTransportGUI
 
         public GeoLocationHelper()
         {
-            UpdateEvent = new List<GeoLocationUpdateEvent>();
+            UpdateEventHandler = new List<GeoLocationUpdateEvent>();
             _geoWatcher = new GeoCoordinateWatcher();
             _geoWatcher.MovementThreshold = 20;
             _geoWatcher.StatusChanged += OnStatusChange;
@@ -22,12 +19,16 @@ namespace SwissTransportGUI
 
             _geoWatcher.Start(false);
         }
+
         public GeoCoordinate GeoCoordinate
         {
             get { return _coordinate; }
         }
 
-        public List<GeoLocationUpdateEvent> UpdateEvent { get; set; }
+        /// <summary>
+        /// Liste, in welche alle EventHandler eingetragen werden können
+        /// </summary>
+        public List<GeoLocationUpdateEvent> UpdateEventHandler { get; set; }
 
         private void OnStatusChange(object sender, GeoPositionStatusChangedEventArgs e)
         {
@@ -53,7 +54,7 @@ namespace SwissTransportGUI
 
         private void CallUpdateEvent()
         {
-            foreach (GeoLocationUpdateEvent updateEvent in UpdateEvent)
+            foreach (GeoLocationUpdateEvent updateEvent in UpdateEventHandler)
             {
                 updateEvent.OnGeoLocationUpdate(GeoCoordinate.Latitude.ToString("###.##############"), GeoCoordinate.Longitude.ToString("###.##############"));
             }

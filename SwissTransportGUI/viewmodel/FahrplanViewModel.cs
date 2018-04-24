@@ -2,6 +2,7 @@
 using SwissTransport;
 using System;
 using System.Collections.ObjectModel;
+using System.Net;
 
 namespace SwissTransportGUI.viewmodel
 {
@@ -27,17 +28,34 @@ namespace SwissTransportGUI.viewmodel
         public bool IsDepartTime { get; set; }
 
         /// <summary>
-        /// okjlklk
+        /// Lädt die ÖV-Verbingungen neu, welche nachher dargestellt. 
+        /// Es werden dabei die Abfahrts-, und Ankunftsstation benötigt, zudem wird die Abfahrtszeit und das Datum beachtet.
+        /// Es kann auch angegeben werden, ob es sich um die Abfahrts- oder Ankunftszeit handelt
         /// </summary>
-        /// <param name="fromLocation">sff</param>
-        /// <param name="toLocation">asdfsd</param>
+        /// <param name="fromLocation">Stationsname des Abfahrtsorts</param>
+        /// <param name="toLocation">Stationsname des Zielorts</param>
         public void UpdateConnections(string fromLocation, string toLocation)
         {
             Connections.Clear();
 
             string departDate = DepartDate.ToString("yyyy-MM-dd");
 
-            Connections searchResult = _transport.GetConnections(fromLocation, toLocation, departDate, DepartTime, IsDepartTime);
+            Connections searchResult = null;
+
+            try
+            {
+                searchResult = _transport.GetConnections(fromLocation, toLocation, departDate, DepartTime, IsDepartTime);
+            }
+            catch (WebException ex)
+            {
+                throw new Exception("Fehler bei der Verbindung. Bitte prüfe deine Internetverbindung.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ein unbekannter Fehler ist aufgetreten. Bitte überprüfen Sie Ihre Angaben und probieren Sie es erneut. Sollte der Fehler erneut auftreten, wenden Sie sich an Ihren Systemadministrator.", ex);
+            }
+
+
             if (searchResult == null || searchResult.ConnectionList == null)
                 return;
 
@@ -48,6 +66,13 @@ namespace SwissTransportGUI.viewmodel
             }
         }
 
+        /// <summary>
+        /// Generiert einen MailTo-Link. Dieser kann mit einem Browser geöffnet werden und öffnet danach direkt das Standart-Mailprogramm.
+        /// Im Mail wird der Betreff, sowie der Inhalt bereits abgefüllt mit den entsprechenden Informationen (Verbindungen wann wohin)
+        /// </summary>
+        /// <param name="fromLocation">Stationsname des Abfahrtsorts</param>
+        /// <param name="toLocation">Stationsname des Zielorts</param>
+        /// <returns>MailTo-Link mit aktuellen Verbindungen</returns>
         public string GetMailToString(string fromLocation, string toLocation)
         {
             string subject = "ÖV-Verbindungen";

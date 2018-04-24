@@ -10,6 +10,7 @@ namespace SwissTransportGUI
     /// </summary>
     public partial class MainWindow : Window
     {
+
         private FahrplanViewModel _viewModelFahrplan;
         private AbfahrtstafelViewModel _viewModelAbfahrtstafel;
         private StationViewModel _viewModelStation;
@@ -27,7 +28,14 @@ namespace SwissTransportGUI
 
         private void TimetableSearchButton_Click(object sender, RoutedEventArgs e)
         {
-            _viewModelFahrplan.UpdateConnections(FromSearchBox.Location, ToSearchBox.Location);
+            try
+            {
+                _viewModelFahrplan.UpdateConnections(FromSearchBox.Location, ToSearchBox.Location);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n\nFehlercode für Profis: " + ex.InnerException.Message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void TabChangeButtonFahrplan_Click(object sender, RoutedEventArgs e)
@@ -50,7 +58,14 @@ namespace SwissTransportGUI
 
         private void AbfahrtstafelLoadButton_Click(object sender, RoutedEventArgs e)
         {
-            _viewModelAbfahrtstafel.UpdateConnections(DepartboardSearchBox.Location);
+            try
+            {
+                _viewModelAbfahrtstafel.UpdateConnections(DepartboardSearchBox.Location);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n\nFehlercode für Profis: " + ex.InnerException.Message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void StationOpenBrowserButton_Click(object sender, RoutedEventArgs e)
@@ -68,7 +83,14 @@ namespace SwissTransportGUI
 
         private void TimetableEmailButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(_viewModelFahrplan.GetMailToString(FromSearchBox.Location, ToSearchBox.Location));
+            try
+            {
+                System.Diagnostics.Process.Start(_viewModelFahrplan.GetMailToString(FromSearchBox.Location, ToSearchBox.Location));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n\nFehlercode für Profis: " + ex.InnerException.Message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
