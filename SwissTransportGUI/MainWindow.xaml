@@ -65,22 +65,26 @@
                         
                         <Grid Grid.Row="2">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.6*"/>
                                 <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="0.3*"/>
+                                <ColumnDefinition Width="0.3*"/>
                             </Grid.ColumnDefinitions>
                             
                             <Label>Datum</Label>
                             <Label Grid.Column="1">Zeit</Label>
+                            <Label Grid.Column="2">Abfahrtszeit</Label>
                         </Grid>
                         
                         <Grid Grid.Row="3">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.6*"/>
                                 <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="0.3*"/>
+                                <ColumnDefinition Width="0.3*"/>
                             </Grid.ColumnDefinitions>
                             
                             <DatePicker Margin="1" SelectedDate="{Binding DepartDate}"></DatePicker>
-                            <TextBox Grid.Column="2" Margin="1" Text="{Binding DepartTime}" /> 
+                            <TextBox Grid.Column="1" Margin="1" Text="{Binding DepartTime}" />
+                            <CheckBox Grid.Column="2" Margin="4" IsChecked="{Binding IsDepartTime}">Abfahrt</CheckBox>
                         </Grid>
 
                         <Button x:Name="TimetableEmailButton" Grid.Row="2" Grid.Column="1" Margin="3" Click="TimetableEmailButton_Click">Verbindungen per Mail verschicken</Button>

@@ -15,6 +15,7 @@ namespace SwissTransportGUI.viewmodel
             Connections = new ObservableCollection<DisplayConnection>();
             DepartDate = DateTime.Now;
             DepartTime = DateTime.Now.ToString("HH:mm");
+            IsDepartTime = true;
         }
 
         public DateTime DepartDate { set; get; }
@@ -23,13 +24,20 @@ namespace SwissTransportGUI.viewmodel
 
         public ObservableCollection<DisplayConnection> Connections { get; set; }
 
+        public bool IsDepartTime { get; set; }
+
+        /// <summary>
+        /// okjlklk
+        /// </summary>
+        /// <param name="fromLocation">sff</param>
+        /// <param name="toLocation">asdfsd</param>
         public void UpdateConnections(string fromLocation, string toLocation)
         {
             Connections.Clear();
 
             string departDate = DepartDate.ToString("yyyy-MM-dd");
 
-            Connections searchResult = _transport.GetConnections(fromLocation, toLocation, departDate, DepartTime);
+            Connections searchResult = _transport.GetConnections(fromLocation, toLocation, departDate, DepartTime, IsDepartTime);
             if (searchResult == null || searchResult.ConnectionList == null)
                 return;
 
